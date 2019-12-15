@@ -11,12 +11,31 @@
     },
     "json": {
       "strict": false,
-      "limit": "100kb"
+      "limit": "204800kb"
     },
     "urlencoded": {
       "extended": true,
-      "limit": "100kb"
+      "limit": "204800kb"
     },
     "cors": false
+  },
+  "legacyExplorer": false,
+  "logoutSessionsOnSensitiveChanges": true,
+  "wechatApp": {
+    "appid": "wx3a048ce49aa22319",
+    "appsecret": "961116c5b0b5d209baf58ff94c8a1ac5",
+    "wechatUrl": "https://api.weixin.qq.com/sns"
+  },
+  "redis": {
+    "port": "6379",
+    "host": "tasks.oa_server_redis-3_2",
+    "pwd": "",
+    "db": "1"
+  },
+  "redis_prod": {
+    "port": "6379",
+    "host": "tasks.oa_server_prod_redis-3_2",
+    "pwd": "",
+    "db": "1"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "mydb": {
+    "name": "mydb",
+    "connector": "mysql",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "database": "oaserver",
+    "password": "6mN2Pf78OO7nym0IM6RDJKSjkn6gPPoG",
+    "user": "oaserver"
+  }
+}

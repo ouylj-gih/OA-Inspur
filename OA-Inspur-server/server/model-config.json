@@ -14,10 +14,10 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "mydb"
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "mydb",
     "public": false
   },
   "ACL": {
@@ -25,14 +25,14 @@
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "mydb",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "mydb",
     "public": false
   }
 }

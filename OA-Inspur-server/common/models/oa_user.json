@@ -1,0 +1,151 @@
+{
+  "name": "OaUser",
+  "description": "oa系统用户表",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "description": "用户名"
+    },
+    "role_id": {
+      "type": "number",
+      "required": true,
+      "description": "角色表id"
+    },
+    "password": {
+      "type": "string",
+      "required": true,
+      "description": "密码"
+    },
+    "en_name": {
+      "type": "string",
+      "required": false,
+      "description": "英文名称"
+    },
+    "position": {
+      "type": "string",
+      "required": true,
+      "description": "职位"
+    },
+    "entry_date": {
+      "type": "date",
+      "required": true,
+      "description": "入职日期"
+    },
+    "office_location": {
+      "type": "string",
+      "required": true,
+      "description": "办公地点"
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "description": "企业邮箱"
+    },
+    "annual_leave": {
+      "type": "number",
+      "required": true,
+      "postgresql": {
+        "dataType": "decimal(18,1)",
+        "dataLength": null,
+        "dataPrecision": 18,
+        "dataScale": 1,
+        "nullable": "NO"
+      },
+      "description": "年假天数",
+      "default": 0
+    },
+    "break_off": {
+      "type": "number",
+      "required": true,
+      "postgresql": {
+        "dataType": "decimal(18,1)",
+        "dataLength": null,
+        "dataPrecision": 18,
+        "dataScale": 1,
+        "nullable": "NO"
+      },
+      "description": "调休天数",
+      "default": 0
+    },
+    "phone": {
+      "type": "string",
+      "required": true,
+      "description": "电话号码"
+    },
+    "address": {
+      "type": "string",
+      "required": true,
+      "description": "家庭地址"
+    },
+    "head_portrait_url": {
+      "type": "string",
+      "required": true,
+      "description": "头像地址",
+      "default": "url"
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "working",
+        "resting"
+      ],
+      "description": "working:上班中;resting:休假中",
+      "default": "working"
+    },
+    "display": {
+      "type": "number",
+      "required": true,
+      "description": "是否已删除: -1-已删除, 1-正常",
+      "default": 1
+    },
+    "create_time": {
+      "type": "date",
+      "required": true,
+      "description": "创建时间",
+      "defaultFn": "now"
+    },
+    "update_time": {
+      "type": "date",
+      "required": false,
+      "description": "修改时间"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "admin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "createOaUser"
+    }
+  ],
+  "methods": {}
+}

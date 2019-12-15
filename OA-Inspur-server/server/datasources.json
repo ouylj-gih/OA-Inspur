@@ -2,5 +2,21 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "mydb": {
+    "name": "mydb",
+    "connector": "mysql",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "database": "oaserver",
+    "password": "12345678",
+    "user": "root"
+  },
+  "storage": {
+    "name": "storage",
+    "connector": "loopback-component-storage",
+    "provider": "filesystem",
+    "root": "./server/storage",
+    "maxFileSize": "52428800"
   }
 }
