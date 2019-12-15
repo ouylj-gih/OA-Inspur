@@ -22,6 +22,7 @@
     "loopback-component-explorer": "^6.2.0",
     "loopback-component-storage": "^3.6.3",
     "loopback-connector-mysql": "^5.4.2",
+    "loopback-connector-kv-redis": "^3.0.0",
     "loopback-context": "^3.3.0",
     "redis": "^2.8.0",
     "serve-favicon": "^2.0.1",
