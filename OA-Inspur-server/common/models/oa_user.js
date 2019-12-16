@@ -111,7 +111,7 @@ module.exports = function (OaUser) {
       }
 
       function createOaUser(oaUser, cb) {
-        OaUser.add(oaUser, (err, addRes) => {
+        OaUser.create(oaUser, (err, addRes) => {
           if (err) {
             console.log(err);
             return cb(utils.clientError("新增用户失败", 400), null);
