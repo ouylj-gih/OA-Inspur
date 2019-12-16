@@ -13,10 +13,10 @@ module.exports = function (app) {
       function createAdminUser(cb) {
         User.findOrCreate({
           where: {
-            username: 'admin',
+            username: 'superAdmin',
           },
         }, {
-          username: 'admin',
+          username: 'superAdmin',
           password: 'MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC',
           email: 'admin@icowallet.net',
         }, function (err, user) {
