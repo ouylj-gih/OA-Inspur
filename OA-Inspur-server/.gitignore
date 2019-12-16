@@ -19,7 +19,7 @@ node_modules
 npm-debug.log
 server/lib/test.js
 package-lock.json
-server/storage/
+server/storage/container1
 .vscode/
 dump.rdb
 bin/ng2-lib-gen.sh
