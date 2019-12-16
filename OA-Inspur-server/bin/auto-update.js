@@ -9,7 +9,7 @@ var ds = app.datasources.mydb;
 // var roles = require('./roles');
 // var initData = require('./init-data');
 
-var models = [];
+var models = ['OaRole', 'OaUser', 'OaAuthorization'];
 var count = models.length;
 models.forEach(function (model) {
   ds.autoupdate(model, function (err) {
@@ -27,7 +27,7 @@ models.forEach(function (model) {
 });
 
 function quit() {
-  console.log('q;uit....');
+  console.log('quit....');
   ds.disconnect();
 
   // How to gracefully quit the app ?

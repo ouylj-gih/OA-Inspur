@@ -31,8 +31,16 @@
       "strictObjectIDCoercion": true
     }
   },
-  "Role": {
+  "OaRole": {
     "dataSource": "mydb",
-    "public": false
+    "public": true
+  },
+  "OaUser": {
+    "dataSource": "mydb",
+    "public": true
+  },
+  "OaAuthorization": {
+    "dataSource": "mydb",
+    "public": true
   }
 }

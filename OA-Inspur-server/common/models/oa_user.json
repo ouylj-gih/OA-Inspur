@@ -119,7 +119,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "OaRole": {
+      "type": "belongsTo",
+      "model": "OaRole",
+      "foreignKey": "role_id"
+    }
+  },
   "acls": [
     {
       "accessType": "*",

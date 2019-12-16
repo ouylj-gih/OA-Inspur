@@ -11,43 +11,43 @@ const mys = require('mysql');
 const conn = mys.createConnection();
 
 const dataSource = new DataSource({
-    connector: require('mysql'),
-    username: config.user,
-    password: config.password,
-    host: config.host,
-    port: config.port,
-    database: config.database
+  connector: require('mysql'),
+  username: config.user,
+  password: config.password,
+  host: config.host,
+  port: config.port,
+  database: config.database
 });
 
 function MySql() {
-    /**
-     * 执行一条sql语句
-     * @param {*} sql SQL语句
-     * @param {*} params 参数绑定
-     * @param {*} callback 
-     */
-    this.exec = function (sql, params, callback) {
-        dataSource.connector.execute(sql, params, function (err, res) {
-            if (err) {
-                return callback(err, null);
-            }
-            return callback(null, res);
-        });
-    };
+  /**
+   * 执行一条sql语句
+   * @param {*} sql SQL语句
+   * @param {*} params 参数绑定
+   * @param {*} callback 
+   */
+  this.exec = function (sql, params, callback) {
+    dataSource.connector.execute(sql, params, function (err, res) {
+      if (err) {
+        return callback(err, null);
+      }
+      return callback(null, res);
+    });
+  };
 
-    /**
-     * 执行一条查询sql语句
-     * @param {*} sql SQL语句
-     * @param {*} params 参数绑定
-     * @param {*} callback 
-     */
-    this.query = function (sql, params, callback) {
-        this.execute(sql, params, callback);
-    };
+  /**
+   * 执行一条查询sql语句
+   * @param {*} sql SQL语句
+   * @param {*} params 参数绑定
+   * @param {*} callback 
+   */
+  this.query = function (sql, params, callback) {
+    this.execute(sql, params, callback);
+  };
 
-    this.getDataSource = function () {
-        return dataSource;
-    }
+  this.getDataSource = function () {
+    return dataSource;
+  }
 }
 
 module.exports = new MySql();
