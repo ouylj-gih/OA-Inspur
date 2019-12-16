@@ -51,7 +51,7 @@
     "annual_leave": {
       "type": "number",
       "required": true,
-      "postgresql": {
+      "mysql": {
         "dataType": "decimal(18,1)",
         "dataLength": null,
         "dataPrecision": 18,
@@ -64,7 +64,7 @@
     "break_off": {
       "type": "number",
       "required": true,
-      "postgresql": {
+      "mysql": {
         "dataType": "decimal(18,1)",
         "dataLength": null,
         "dataPrecision": 18,
