@@ -28,7 +28,7 @@
   },
   "redis": {
     "port": "6379",
-    "host": "tasks.oa_server_redis-3_2",
+    "host": "127.0.0.1",
     "pwd": "",
     "db": "1"
   },

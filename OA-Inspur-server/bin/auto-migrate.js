@@ -5,7 +5,7 @@ var path = require('path');
 
 var app = require(path.resolve(__dirname, '../server/server'));
 var roles = require('./roles');
-var ds = app.datasources.psql;
+var ds = app.datasources.mydb;
 // var roles = require('./roles');
 // var initData = require('./init-data');
 
