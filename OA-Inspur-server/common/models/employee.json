@@ -1,6 +1,6 @@
 {
-  "name": "OaUser",
-  "description": "oa系统用户表",
+  "name": "Employee",
+  "description": "员工表",
   "base": "PersistedModel",
   "idInjection": true,
   "indexes": {},
@@ -8,7 +8,7 @@
     "validateUpsert": true
   },
   "properties": {
-    "name": {
+    "username": {
       "type": "string",
       "required": true,
       "description": "用户名"
@@ -16,7 +16,12 @@
     "role_id": {
       "type": "number",
       "required": true,
-      "description": "角色表id"
+      "description": "角色ID"
+    },
+    "org_id": {
+      "type": "number",
+      "required": true,
+      "description": "组织ID"
     },
     "password": {
       "type": "string",
@@ -74,7 +79,7 @@
       "description": "调休天数",
       "default": 0
     },
-    "phone": {
+    "phone_number": {
       "type": "string",
       "required": true,
       "description": "电话号码"
@@ -84,7 +89,7 @@
       "required": true,
       "description": "家庭地址"
     },
-    "head_portrait_url": {
+    "portrait_url": {
       "type": "string",
       "required": true,
       "description": "头像地址",

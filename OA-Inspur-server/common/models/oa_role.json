@@ -43,7 +43,7 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "admin",
+      "principalId": "superAdmin",
       "permission": "ALLOW"
     },
     {

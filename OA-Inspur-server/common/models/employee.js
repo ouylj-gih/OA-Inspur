@@ -5,11 +5,11 @@ const utils = require("../../server/lib/utils");
 const redis = require("../../server/lib/datasources/redis");
 const randomString = require("randomstring");
 
-module.exports = function (OaUser) {
+module.exports = function (Employee) {
 
-  function defineCreateOaUserModel(app, cb) {
-    const CreateOaUserModel = {
-      "name": {
+  function defineCreateEmployeeModel(app, cb) {
+    const CreateEmployeeModel = {
+      "username": {
         "type": "string",
         "required": true,
         "description": "用户名"
@@ -17,7 +17,12 @@ module.exports = function (OaUser) {
       "role_id": {
         "type": "number",
         "required": true,
-        "description": "角色表id"
+        "description": "角色ID"
+      },
+      "org_id": {
+        "type": "number",
+        "required": true,
+        "description": "组织ID"
       },
       "password": {
         "type": "string",
@@ -30,11 +35,6 @@ module.exports = function (OaUser) {
         "description": "英文名称"
       },
       "position": {
-        "type": "string",
-        "required": true,
-        "description": "职位"
-      },
-      "role_id": {
         "type": "string",
         "required": true,
         "description": "职位"
@@ -54,7 +54,7 @@ module.exports = function (OaUser) {
         "required": true,
         "description": "企业邮箱"
       },
-      "phone": {
+      "phone_number": {
         "type": "string",
         "required": true,
         "description": "电话号码"
@@ -64,23 +64,24 @@ module.exports = function (OaUser) {
         "required": true,
         "description": "家庭地址"
       },
-      // "head_portrait_url": {
-      //     "type": "string",
-      //     "required": true,
-      //     "description": "头像地址"
-      // }
+      "portrait_url": {
+        "type": "string",
+        "required": true,
+        "description": "头像地址",
+        "default": "url"
+      }
     }
     var ds = app.datasources.db;
-    ds.define('CreateOaUserModel', CreateOaUserModel, {
+    ds.define('CreateEmployeeModel', CreateEmployeeModel, {
       idInjection: false
     });
     cb(null, app);
   }
 
-  function defineCreateOaUser(app, cb) {
-    OaUser.createOaUser = function (info, cb) {
+  function defineCreateEmployee(app, cb) {
+    Employee.createEmployee = function (info, cb) {
       function checkModelValid(cb) {
-        const Model = app.datasources.db.getModel('CreateOaUserModel');
+        const Model = app.datasources.db.getModel('CreateEmployeeModel');
         var m = new Model(info);
         m.isValid(function (valid) {
           if (!valid) {
@@ -91,27 +92,27 @@ module.exports = function (OaUser) {
         });
       }
 
-      function checkUserInfo(ign, cb) {
+      function checkEmployeeInfo(ign, cb) {
         //校验名字去空格之后是否为空
-        const name = info.name;
-        if (null == info.name || null == info.name.trim()) {
+        const username = info.username;
+        if (null == info.username || null == info.username.trim()) {
 
         }
         const now = Date.now();
-        const oaUser = {
-          name: name,
-          head_portrait_url: "url",
+        const employee = {
+          username: username,
+          portrait_url: "url",
           status: "working",
           display: 1,
           create_time: now,
           update_time: now,
           ...info
         };
-        cb(null, oaUser);
+        cb(null, employee);
       }
 
-      function createOaUser(oaUser, cb) {
-        OaUser.create(oaUser, (err, addRes) => {
+      function createEmployee(employee, cb) {
+        Employee.create(employee, (err, addRes) => {
           if (err) {
             console.log(err);
             return cb(utils.clientError("新增用户失败", 400), null);
@@ -122,8 +123,8 @@ module.exports = function (OaUser) {
 
       _async.waterfall([
         checkModelValid,
-        checkUserInfo,
-        createOaUser
+        checkEmployeeInfo,
+        createEmployee
       ], function (err, result) {
         if (err) {
           return cb(err, null);
@@ -131,14 +132,14 @@ module.exports = function (OaUser) {
         cb(null, result);
       })
     }
-    OaUser.remoteMethod('createOaUser', {
+    Employee.remoteMethod('createEmployee', {
       http: {
         verb: 'POST',
       },
-      description: "添加用户",
+      description: "添加员工",
       accepts: {
         arg: 'info',
-        type: 'CreateOaUserModel',
+        type: 'CreateEmployeeModel',
         http: {
           source: 'body'
         }
@@ -152,13 +153,13 @@ module.exports = function (OaUser) {
   }
 
   _async.waterfall([
-    OaUser.getApp.bind(OaUser),
-    defineCreateOaUserModel,
-    defineCreateOaUser
+    Employee.getApp.bind(Employee),
+    defineCreateEmployeeModel,
+    defineCreateEmployee
   ])
 
-  function defineUserLoginModel(app, cb) {
-    const UserLoginModel = {
+  function defineEmployeeLoginModel(app, cb) {
+    const EmployeeLoginModel = {
       "name": {
         "type": "string",
         "required": true,
@@ -171,7 +172,7 @@ module.exports = function (OaUser) {
       },
     }
     var ds = app.datasources.db;
-    ds.define('UserLoginModel', UserLoginModel, {
+    ds.define('EmployeeLoginModel', EmployeeLoginModel, {
       idInjection: false
     });
     cb(null, app);
@@ -179,10 +180,10 @@ module.exports = function (OaUser) {
 
 
   // 用户登录
-  function defineUserLogin(app, cb) {
-    OaUser.userLogin = function (info, cb) {
+  function defineEmployeeLogin(app, cb) {
+    Employee.employeeLogin = function (info, cb) {
       function checkModelValid(cb) {
-        const Model = app.datasources.db.getModel('UserLoginModel');
+        const Model = app.datasources.db.getModel('EmployeeLoginModel');
         var m = new Model(info);
         m.isValid(function (valid) {
           if (!valid) {
@@ -193,31 +194,31 @@ module.exports = function (OaUser) {
         });
       }
 
-      function checkUserAndPassword(ign, cb) {
-        OaUser.findOne({
+      function checkEmployeeAndPassword(ign, cb) {
+        Employee.findOne({
           where: {
             name: info.name,
             password: info.password,
             display: 1
           }
-        }, (err, oaUser) => {
+        }, (err, employee) => {
           if (err) {
             console.log(err);
             return cb(utils.clientError("查询用户信息失败", 400), null);
           }
-          if (null == oaUser)
+          if (null == employee)
             return cb(utils.clientError("用户名或密码不正确", 400), null);
-          delete oaUser.password;
-          cb(null, oaUser);
+          delete employee.password;
+          cb(null, employee);
         })
       }
 
-      function returnRandomStr(oaUser, cb) {
+      function returnRandomStr(employee, cb) {
         const code = randomString.generate({
           length: 8,
           readable: true
         });
-        const key = "oa_user:" + oaUser.id;
+        const key = "oa_user:" + employee.id;
         code = code + key;
         redis.set(key, code, 0, (err, res) => {
           if (err) {
@@ -230,7 +231,7 @@ module.exports = function (OaUser) {
 
       _async.waterfall([
         checkModelValid,
-        checkUserAndPassword,
+        checkEmployeeAndPassword,
         returnRandomStr
       ], function (err, result) {
         if (err) {
@@ -240,14 +241,14 @@ module.exports = function (OaUser) {
       })
     }
 
-    OaUser.remoteMethod('userLogin', {
+    Employee.remoteMethod('employeeLogin', {
       http: {
         verb: 'POST',
       },
       description: "用户登录",
       accepts: {
         arg: 'info',
-        type: 'UserLoginModel',
+        type: 'EmployeeLoginModel',
         http: {
           source: 'body'
         }
@@ -261,8 +262,8 @@ module.exports = function (OaUser) {
   }
 
   _async.waterfall([
-    OaUser.getApp.bind(OaUser),
-    defineUserLoginModel,
-    defineUserLogin
+    Employee.getApp.bind(Employee),
+    defineEmployeeLoginModel,
+    defineEmployeeLogin
   ])
 };
