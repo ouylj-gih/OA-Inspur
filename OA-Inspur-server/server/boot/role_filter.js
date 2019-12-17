@@ -9,15 +9,16 @@ module.exports = function (app) {
   const ignore_interception_method = ['userLogin'];
 
   // Role.registerResolver('$everyone', function (role, context, cb) {
-  //   //判断是否为需要登录状态的方法
+  //   // 判断是否为需要登录状态的方法
   //   const method = context.method;
+  //   console.log(method);
   //   const need_interception = utils.in_array(method, ignore_interception_method);
 
   //   if (!need_interception) {
-  //     //检测是否登录
+  //     // 检测是否登录
   //     let data = context.remotingContext.req.body;
   //     if (!data.hasOwnProperty('token')) {
-  //       return callback(utils.clientError('未登录', 400), null);
+  //       return cb(utils.clientError('未登录', 400), null);
   //     }
   //     const token = data.token;
   //     const key = token.substring(8);

@@ -16,6 +16,7 @@ module.exports = function (app) {
             username: 'superAdmin',
           },
         }, {
+          // {"username":"superAdmin","password":"MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC"}
           username: 'superAdmin',
           password: 'MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC',
           email: 'admin@icowallet.net',

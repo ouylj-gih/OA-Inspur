@@ -52,7 +52,7 @@
       "type": "number",
       "required": true,
       "mysql": {
-        "dataType": "decimal(18,1)",
+        "dataType": "float",
         "dataLength": null,
         "dataPrecision": 18,
         "dataScale": 1,
@@ -65,7 +65,7 @@
       "type": "number",
       "required": true,
       "mysql": {
-        "dataType": "decimal(18,1)",
+        "dataType": "float",
         "dataLength": null,
         "dataPrecision": 18,
         "dataScale": 1,

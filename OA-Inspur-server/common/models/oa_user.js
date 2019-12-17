@@ -150,6 +150,7 @@ module.exports = function (OaUser) {
       }
     });
   }
+
   _async.waterfall([
     OaUser.getApp.bind(OaUser),
     defineCreateOaUserModel,
@@ -176,6 +177,8 @@ module.exports = function (OaUser) {
     cb(null, app);
   }
 
+
+  // 用户登录
   function defineUserLogin(app, cb) {
     OaUser.userLogin = function (info, cb) {
       function checkModelValid(cb) {
@@ -191,7 +194,7 @@ module.exports = function (OaUser) {
       }
 
       function checkUserAndPassword(ign, cb) {
-        OaUser.find({
+        OaUser.findOne({
           where: {
             name: info.name,
             password: info.password,
@@ -236,14 +239,15 @@ module.exports = function (OaUser) {
         cb(null, result);
       })
     }
-    OaUser.remoteMethod('createOaUser', {
+
+    OaUser.remoteMethod('userLogin', {
       http: {
         verb: 'POST',
       },
-      description: "添加用户",
+      description: "用户登录",
       accepts: {
         arg: 'info',
-        type: 'CreateOaUserModel',
+        type: 'UserLoginModel',
         http: {
           source: 'body'
         }
