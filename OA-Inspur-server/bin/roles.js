@@ -5,21 +5,27 @@ module.exports = function (app) {
 
   // var defer = Q.defer();
   var Role = app.models.Role;
-  var User = app.models.User;
+  var Employee = app.models.Employee;
   var RoleMapping = app.models.RoleMapping;
 
   function setAdmin() {
     return new Promise(function (resolve, reject) {
       function createAdminUser(cb) {
-        User.findOrCreate({
+        Employee.findOrCreate({
           where: {
             username: 'superAdmin',
           },
         }, {
           // {"username":"superAdmin","password":"MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC"}
           username: 'superAdmin',
+          org_id: '0',
+          position_id: '0',
+          entry_date: '2019-12-18T07:25:25.927Z',
+          office_location: 'office_location',
+          phone_number: '13999999999',
+          address: 'address',
           password: 'MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC',
-          email: 'admin@icowallet.net',
+          email: 'superAdmin@icowallet.net',
         }, function (err, user) {
           cb(err, user);
         });

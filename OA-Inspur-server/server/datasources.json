@@ -4,12 +4,12 @@
     "connector": "memory"
   },
   "mydb": {
-    "name": "mydb",
-    "connector": "mysql",
     "host": "127.0.0.1",
     "port": 3306,
     "database": "oaserver",
     "password": "12345678",
+    "name": "mydb",
+    "connector": "mysql",
     "user": "root"
   },
   "storage": {

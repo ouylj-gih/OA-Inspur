@@ -1,85 +1,66 @@
 {
-    "name": "Orgnization",
-    "description": "组织表",
-    "base": "PersistedModel",
-    "idInjection": true,
-    "indexes": {},
-    "options": {
-        "validateUpsert": true
+  "name": "Orgnization",
+  "description": "组织表",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "org_name": {
+      "type": "string",
+      "required": true,
+      "description": "组织名称"
     },
-    "properties": {
-        "org_name": {
-            "type": "string",
-            "required": true,
-            "description": "组织名称"
-        },
-        "office_location": {
-            "type": "string",
-            "required": true,
-            "description": "办公地点"
-        },
-        "parent_org_id": {
-            "type": "string",
-            "required": true,
-            "description": "上级组织"
-        },
-        "child_org_ids": {
-            "type": "array",
-            "required": true,
-            "description": "下级组织"
-        },
-        "display": {
-            "type": "number",
-            "required": true,
-            "description": "是否已删除: -1-已删除, 1-正常",
-            "default": 1
-        },
-        "create_time": {
-            "type": "date",
-            "required": true,
-            "description": "创建时间",
-            "defaultFn": "now"
-        },
-        "update_time": {
-            "type": "date",
-            "required": false,
-            "description": "修改时间"
-        }
+    "office_location": {
+      "type": "string",
+      "required": true,
+      "description": "办公地点"
     },
-    "validations": [],
-    "relations": {
-        "OaRole": {
-            "type": "belongsTo",
-            "model": "OaRole",
-            "foreignKey": "role_id"
-        }
+    "parent_org_id": {
+      "type": "string",
+      "required": true,
+      "description": "上级组织"
     },
-    "acls": [
-        {
-            "accessType": "*",
-            "principalType": "ROLE",
-            "principalId": "$everyone",
-            "permission": "DENY"
-        },
-        {
-            "accessType": "*",
-            "principalType": "ROLE",
-            "principalId": "admin",
-            "permission": "ALLOW"
-        },
-        {
-            "accessType": "READ",
-            "principalType": "ROLE",
-            "principalId": "$everyone",
-            "permission": "ALLOW"
-        },
-        {
-            "accessType": "EXECUTE",
-            "principalType": "ROLE",
-            "principalId": "$everyone",
-            "permission": "ALLOW",
-            "property": "createOaUser"
-        }
-    ],
-    "methods": {}
+    "child_org_ids": {
+      "type": "array",
+      "required": true,
+      "description": "下级组织"
+    },
+    "display": {
+      "type": "number",
+      "required": true,
+      "description": "是否已删除: -1-已删除, 1-正常",
+      "default": 1
+    },
+    "create_time": {
+      "type": "date",
+      "required": true,
+      "description": "创建时间",
+      "defaultFn": "now"
+    },
+    "update_time": {
+      "type": "date",
+      "required": false,
+      "description": "修改时间"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "employees": {
+      "type": "hasMany",
+      "model": "Employee",
+      "foreignKey": "org_id"
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "DENY"
+    }
+  ],
+  "methods": {}
 }

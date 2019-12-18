@@ -14,14 +14,15 @@
     ]
   },
   "User": {
-    "dataSource": "mydb"
-  },
-  "AccessToken": {
     "dataSource": "mydb",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "mydb",
+    "public": false
+  },
+  "AccessToken": {
+    "dataSource": "mydb",
     "public": false
   },
   "RoleMapping": {
@@ -35,7 +36,7 @@
     "dataSource": "mydb",
     "public": false
   },
-  "OaRole": {
+  "LogRecord": {
     "dataSource": "mydb",
     "public": true
   },
@@ -43,15 +44,11 @@
     "dataSource": "mydb",
     "public": true
   },
-  "OaAuthorization": {
-    "dataSource": "mydb",
-    "public": true
-  },
-  "LogRecord": {
-    "dataSource": "mydb",
-    "public": true
-  },
   "Orgnization": {
+    "dataSource": "mydb",
+    "public": true
+  },
+  "Position": {
     "dataSource": "mydb",
     "public": true
   }
