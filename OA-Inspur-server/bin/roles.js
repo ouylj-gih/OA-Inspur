@@ -10,7 +10,7 @@ module.exports = function (app) {
 
   function setAdmin() {
     return new Promise(function (resolve, reject) {
-      function createAdminUser(cb) {
+      function createSuperAdminUser(cb) {
         Employee.findOrCreate({
           where: {
             username: 'superAdmin1',
@@ -62,7 +62,7 @@ module.exports = function (app) {
 
       function createOtherRoles(admin, roleMapping, cb) {
         const roles = [{
-            name: 'departmentAdmin'
+            name: 'departmentAdmin',
           },
           {
             name: 'personneAdmin'
@@ -83,7 +83,7 @@ module.exports = function (app) {
       }
 
       waterfall([
-        createAdminUser,
+        createSuperAdminUser,
         createAdminRole,
         createAdminRoleMapping,
         createOtherRoles,
