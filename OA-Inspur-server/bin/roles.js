@@ -56,14 +56,37 @@ module.exports = function (app) {
           },
           adminMapping,
           function (err, principal) {
-            cb(err, principal);
+            cb(err, admin, principal);
           });
+      }
+
+      function createOtherRoles(admin, roleMapping, cb) {
+        const roles = [{
+            name: 'departmentAdmin'
+          },
+          {
+            name: 'personneAdmin'
+          },
+          {
+            name: 'staffAdmin'
+          },
+          {
+            name: 'ITAdmin'
+          },
+          {
+            name: 'user'
+          },
+        ]
+        Role.create(roles, function (err, role) {
+          cb(err, role);
+        })
       }
 
       waterfall([
         createAdminUser,
         createAdminRole,
         createAdminRoleMapping,
+        createOtherRoles,
       ], function (err, p) {
         if (err) {
           return reject(err);
