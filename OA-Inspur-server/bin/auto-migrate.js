@@ -9,7 +9,7 @@ var ds = app.datasources.mydb;
 // var roles = require('./roles');
 // var initData = require('./init-data');
 
-var models = ['Employee', 'AccessToken', 'Role', 'RoleMapping', 'ACL'];
+var models = ['AccessToken', 'Role', 'RoleMapping', 'ACL', 'Employee'];
 var count = models.length;
 models.forEach(function (model) {
   ds.automigrate(model, function (err) {
