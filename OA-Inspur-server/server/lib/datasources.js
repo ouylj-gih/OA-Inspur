@@ -1,10 +1,10 @@
 'use strict';
 
-const psql = require('./datasources/postgreSql.js');
+const mysql = require('./datasources/mysql.js');
 const redis = require('./datasources/redis.js');
 
 let datasources = {};
-datasources.psql = psql;
+datasources.mysql = mysql;
 datasources.redis = redis;
 
 module.exports = datasources;
