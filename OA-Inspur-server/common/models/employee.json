@@ -124,6 +124,16 @@
       "type": "belongsTo",
       "model": "Orgnization",
       "foreignKey": "org_id"
+    },
+    "position": {
+      "type": "belongsTo",
+      "model": "Position",
+      "foreignKey": "position_id"
+    },
+    "schedule": {
+      "type": "hasMany",
+      "model": "Schedule",
+      "foreignKey": "id"
     }
   },
   "acls": [
@@ -158,16 +168,17 @@
       "permission": "ALLOW"
     },
     {
-      "accessType": "READ",
+      "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "ITAdmin",
+      "principalId": "$owner",
       "permission": "ALLOW"
     },
     {
-      "accessType": "READ",
+      "accessType": "EXECUTE",
       "principalType": "ROLE",
-      "principalId": "user",
-      "permission": "ALLOW"
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "getContacts"
     }
   ],
   "methods": {}
