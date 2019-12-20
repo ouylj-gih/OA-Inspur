@@ -25,16 +25,34 @@
     "done": {
       "type": "boolean",
       "required": true,
-      "description": "是否完成"
+      "description": "是否完成",
+      "default": "false"
     },
     "start_time": {
-      "type": "date",
+      "type": "string",
       "required": true,
       "description": "开始时间"
     },
     "end_time": {
       "type": "string",
       "description": "结束时间"
+    },
+    "display": {
+      "type": "number",
+      "required": true,
+      "description": "是否已删除: -1-已删除, 1-正常",
+      "default": 1
+    },
+    "create_time": {
+      "type": "date",
+      "required": true,
+      "description": "创建时间",
+      "defaultFn": "now"
+    },
+    "update_time": {
+      "type": "date",
+      "required": false,
+      "description": "修改时间"
     }
   },
   "validations": [],
