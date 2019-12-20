@@ -33,7 +33,8 @@ module.exports = function (app) {
 
       function createAdminRole(admin, cb) {
         var adminRole = {
-          name: 'superAdmin'
+          name: 'superAdmin',
+          description: "超级管理员"
         };
         Role.findOrCreate({
             where: adminRole,
@@ -63,18 +64,23 @@ module.exports = function (app) {
       function createOtherRoles(admin, roleMapping, cb) {
         const roles = [{
             name: 'departmentAdmin',
+            description: '部门管理员'
           },
           {
-            name: 'personneAdmin'
+            name: 'personnelAdmin',
+            description: '人事管理员'
           },
           {
-            name: 'staffAdmin'
+            name: 'staffAdmin',
+            description: '员工管理员'
           },
           {
-            name: 'ITAdmin'
+            name: 'ITAdmin',
+            description: 'IT管理员'
           },
           {
-            name: 'user'
+            name: 'user',
+            description: '普通用户'
           },
         ]
         Role.create(roles, function (err, role) {

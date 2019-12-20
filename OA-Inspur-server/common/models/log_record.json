@@ -41,7 +41,7 @@
       "permission": "DENY"
     },
     {
-      "accessType": "*",
+      "accessType": "READ",
       "principalType": "ROLE",
       "principalId": "superAdmin",
       "permission": "ALLOW"
