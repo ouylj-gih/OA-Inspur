@@ -59,5 +59,9 @@
   "RoleMap": {
     "dataSource": "mydb",
     "public": true
+  },
+  "EmployeeRole": {
+    "dataSource": "mydb",
+    "public": true
   }
 }

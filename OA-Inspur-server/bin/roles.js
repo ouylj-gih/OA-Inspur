@@ -5,7 +5,7 @@ module.exports = function (app) {
 
   // var defer = Q.defer();
   var Employee = app.models.Employee;
-  var Role = app.models.Role;
+  var EmployeeRole = app.models.EmployeeRole;
   var RoleMap = app.models.RoleMap;
 
   function setAdmin() {
@@ -36,7 +36,7 @@ module.exports = function (app) {
           name: 'superAdmin',
           description: "超级管理员"
         };
-        Role.findOrCreate({
+        EmployeeRole.findOrCreate({
             where: adminRole,
           },
           adminRole,
@@ -83,7 +83,7 @@ module.exports = function (app) {
             description: '普通用户'
           },
         ]
-        Role.create(roles, function (err, role) {
+        EmployeeRole.create(roles, function (err, role) {
           cb(err, role);
         })
       }
@@ -106,7 +106,7 @@ module.exports = function (app) {
   function setEndUser() {
     return new Promise(function(resolve, reject) {
       var enduserRole = { name: 'enduser' };
-      Role.findOrCreate(enduserRole, function (err, user) {
+      EmployeeRole.findOrCreate(enduserRole, function (err, user) {
         if (err) throw err;
         resolve(true);
       });

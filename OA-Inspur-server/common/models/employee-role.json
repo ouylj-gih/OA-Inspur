@@ -1,0 +1,20 @@
+{
+  "name": "EmployeeRole",
+  "base": "Role",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "employee": {
+      "type": "hasMany",
+      "model": "Employee",
+      "foreignKey": "id",
+      "through": "RoleMap"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
