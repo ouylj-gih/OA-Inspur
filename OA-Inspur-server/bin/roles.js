@@ -6,7 +6,7 @@ module.exports = function (app) {
   // var defer = Q.defer();
   var Employee = app.models.Employee;
   var Role = app.models.Role;
-  var RoleMapping = app.models.RoleMapping;
+  var RoleMap = app.models.RoleMap;
 
   function setAdmin() {
     return new Promise(function (resolve, reject) {
@@ -45,14 +45,14 @@ module.exports = function (app) {
           });
       }
 
-      function createAdminRoleMapping(admin, role, cb) {
+      function createAdminRoleMap(admin, role, cb) {
         var adminMapping = {
           roleId: role.id,
-          principalType: RoleMapping.USER,
+          principalType: RoleMap.USER,
           principalId: admin.id,
         };
         // make admin
-        RoleMapping.findOrCreate({
+        RoleMap.findOrCreate({
             where: adminMapping,
           },
           adminMapping,
@@ -91,7 +91,7 @@ module.exports = function (app) {
       waterfall([
         createSuperAdminUser,
         createAdminRole,
-        createAdminRoleMapping,
+        createAdminRoleMap,
         createOtherRoles,
       ], function (err, p) {
         if (err) {

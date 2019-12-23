@@ -55,5 +55,9 @@
   "Schedule": {
     "dataSource": "mydb",
     "public": true
+  },
+  "RoleMap": {
+    "dataSource": "mydb",
+    "public": true
   }
 }
