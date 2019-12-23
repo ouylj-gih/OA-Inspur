@@ -6,12 +6,33 @@ const redis = require("../../server/lib/datasources/redis");
 const randomString = require("randomstring");
 
 module.exports = function (Employee) {
-  function defineGetContacts() {
+  function defineGetContacts(app, cb) {
+
+    const getContactsModel = {
+      "pageSize": {
+        "type": "number",
+        "required": true,
+        "description": "每页数量"
+      },
+      "pageNumber": {
+        "type": "number",
+        "required": true,
+        "description": "当前页码"
+      }
+    }
+    var ds = app.datasources.db;
+    ds.define('getContactsModel', getContactsModel, {
+      idInjection: false
+    });
+
     Employee.getContacts = function (msg, cb) {
+      console.log(msg)
       Employee.find({
         where: {
           display: 1
         },
+        limit: Number(msg.pageSize),
+        offset: msg.pageNumber * msg.pageSize,
         include: ["orgnization", "position"]
       }, function (err, res) {
         if (err) {
@@ -27,9 +48,10 @@ module.exports = function (Employee) {
       },
       description: "获取通讯录",
       accepts: {
-        type: "object",
+        type: "getContactsModel",
+        arg: "info",
         http: {
-          source: 'body'
+          source: 'query'
         }
       },
       returns: {
@@ -40,5 +62,8 @@ module.exports = function (Employee) {
     });
   }
 
-  defineGetContacts();
+  _async.waterfall([
+    Employee.getApp.bind(Employee),
+    defineGetContacts
+  ])
 }
