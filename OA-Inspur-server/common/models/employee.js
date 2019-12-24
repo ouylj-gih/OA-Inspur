@@ -10,12 +10,12 @@ module.exports = function (Employee) {
     const getContactsModel = {
       pageSize: {
         type: 'number',
-        required: true,
+        required: false,
         description: "每页数量"
       },
       pageNumber: {
         type: 'number',
-        required: true,
+        required: false,
         description: "当前页码 "
       }
     };
@@ -42,11 +42,10 @@ module.exports = function (Employee) {
       }
 
       function getContacts(ign, cb) {
-        if (!info.pageSize) {
-          info.pageSize = 10;
-        }
-        if (!info.pageNumber) {
-          info.pageNumber = 0;
+        const paginator = {};
+        if (info.pageSize && info.pageNumber) {
+          paginator["limit"] = Number(info.pageSize);
+          paginator["offset"] = info.pageNumber * info.pageSize;
         }
         Employee.find({
           where: {
@@ -55,7 +54,8 @@ module.exports = function (Employee) {
           order: 'id desc',
           limit: Number(info.pageSize),
           offset: info.pageNumber * info.pageSize,
-          include: ["orgnization", "position"]
+          include: ["orgnization", "position"],
+          ...paginator
         }, (err, logList) => {
           if (err) {
             return cb(utils.clientError('查询通讯录错误: ' + err), null);
