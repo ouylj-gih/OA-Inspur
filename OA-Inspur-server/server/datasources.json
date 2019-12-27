@@ -7,7 +7,7 @@
     "host": "127.0.0.1",
     "port": 3306,
     "database": "oaserver",
-    "password": "123456",
+    "password": "12345678",
     "name": "mydb",
     "connector": "mysql",
     "user": "root"
