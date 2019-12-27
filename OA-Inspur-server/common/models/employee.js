@@ -43,7 +43,7 @@ module.exports = function (Employee) {
 
       function getContacts(ign, cb) {
         const paginator = {};
-        if (info.pageSize && info.pageNumber) {
+        if (info && info.hasOwnProperty('pageSize') && info.hasOwnProperty('pageNumber')) {
           paginator["limit"] = Number(info.pageSize);
           paginator["offset"] = info.pageNumber * info.pageSize;
         }
@@ -52,8 +52,6 @@ module.exports = function (Employee) {
             display: 1
           },
           order: 'id desc',
-          limit: Number(info.pageSize),
-          offset: info.pageNumber * info.pageSize,
           include: ["orgnization", "position"],
           ...paginator
         }, (err, logList) => {

@@ -8,7 +8,18 @@
   },
   "properties": {},
   "validations": [],
-  "relations": {},
+  "relations": {
+    "employeeRole": {
+      "type": "belongsTo",
+      "model": "EmployeeRole",
+      "foreignKey": "roleId"
+    },
+    "employee": {
+      "type": "belongsTo",
+      "model": "Employee",
+      "foreignKey": "principalId"
+    }
+  },
   "acls": [
     {
       "accessType": "*",

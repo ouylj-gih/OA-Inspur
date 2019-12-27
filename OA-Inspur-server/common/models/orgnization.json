@@ -51,7 +51,7 @@
     "employees": {
       "type": "hasMany",
       "model": "Employee",
-      "foreignKey": "id"
+      "foreignKey": "org_id"
     }
   },
   "acls": [

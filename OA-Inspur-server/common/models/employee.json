@@ -133,7 +133,13 @@
     "schedule": {
       "type": "hasMany",
       "model": "Schedule",
-      "foreignKey": "id"
+      "foreignKey": "employee_id"
+    },
+    "employeeRole": {
+      "type": "hasMany",
+      "model": "EmployeeRole",
+      "foreignKey": "principalId",
+      "through": "RoleMap"
     }
   },
   "acls": [
