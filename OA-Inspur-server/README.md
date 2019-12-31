@@ -26,47 +26,6 @@ npm start (or `node .`)
 ### REST API 
 http://localhost:3000/explorer/
 
+### WIKI 
+https://github.com/ouylj-gih/OA-Inspur/wiki
 
-# wiki
-### 1. 管理员创建员工角色
-
-#### ___endpoint :___
-```javascript
- POST /RoleMaps
-```
-
-#### EXAMPLE : 
-```javascript
-{                     
-  "principalType": "USER",
-  "principalId": 0,          //employeeId
-  "roleId": 0                //roleId  
-}
-```
-#### 角色信息 : 
-```javascript        
-  [{
-    "name": "superAdmin",
-    "description": "超级管理员"
-  },
-  {
-    "name": "user",
-    "description": "普通用户"
-  },
-  {
-    "name": "personnelAdmin",
-    "description": "人事管理员"
-  },
-  {
-    "name": "staffAdmin",
-    "description": "员工管理员"
-  },
-  {
-    "name": "departmentAdmin",
-    "description": "部门管理员"
-  },
-  {
-    "name": "ITAdmin",
-    "description": "IT管理员"
-  }]
-```
