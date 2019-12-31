@@ -30,8 +30,12 @@ http://localhost:3000/explorer/
 # wiki
 1. 管理员创建员工角色
 POST  /RoleMaps
-example : {                     
+
+EXAMPLE : 
+```javascript
+{                     
   "principalType": "USER",
   "principalId": 0,          //employeeId
   "roleId": 0                //roleId  
 }
+```
