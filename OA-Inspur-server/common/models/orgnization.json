@@ -23,11 +23,6 @@
       "required": true,
       "description": "上级组织"
     },
-    "child_org_ids": {
-      "type": "array",
-      "required": true,
-      "description": "下级组织"
-    },
     "display": {
       "type": "number",
       "required": true,
