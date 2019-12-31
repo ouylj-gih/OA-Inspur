@@ -6,6 +6,23 @@ const redis = require("../../server/lib/datasources/redis");
 const randomString = require("randomstring");
 
 module.exports = function (Employee) {
+  const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
+  const emailReg = /^([A-Za-z0-9_\-\.])+\@(inspurworld.com)$/;
+  Employee.validatesFormatOf('email', {
+    with: emailReg,
+    message: '请输入正确的邮箱地址'
+  });
+  Employee.validatesUniquenessOf('email', {
+    message: '邮箱已存在'
+  });
+  Employee.validatesUniquenessOf('username', {
+    message: '用户名已存在'
+  });
+  Employee.validatesFormatOf('phone_number', {
+    with: phoneReg,
+    message: '请输入正确的电话号码'
+  });
+
   function defineGetContactsModel(app, cb) {
     const getContactsModel = {
       pageSize: {
@@ -49,10 +66,39 @@ module.exports = function (Employee) {
         }
         Employee.find({
           where: {
-            display: 1
+            and: [{
+              display: 1
+            }, {
+              id: {
+                neq: 1
+              }
+            }]
+          },
+          fields: {
+            display: false,
+            create_time: false,
+            update_time: false,
+            realm: false,
+            emailVerified: false,
           },
           order: 'id desc',
-          include: ["orgnization", "position"],
+          include: [{
+            relation: "orgnization",
+            scope: { // fetch 1st "page" with 5 entries in it
+              fields: {
+                org_name: true,
+                office_location: true,
+                parent_org_id: true
+              }
+            }
+          }, {
+            relation: "position",
+            scope: { // fetch 1st "page" with 5 entries in it
+              fields: {
+                name: true
+              }
+            }
+          }],
           ...paginator
         }, (err, logList) => {
           if (err) {
