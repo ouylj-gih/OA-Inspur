@@ -63,5 +63,9 @@
   "EmployeeRole": {
     "dataSource": "mydb",
     "public": true
+  },
+  "portrait": {
+    "dataSource": "storage",
+    "public": true
   }
 }

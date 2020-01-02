@@ -1,25 +1,14 @@
 {
-  "name": "RoleMap",
-  "description": "角色映射表",
-  "base": "RoleMapping",
+  "name": "portrait",
+  "base": "Model",
+  "description": "头像",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {},
   "validations": [],
-  "relations": {
-    "employeeRole": {
-      "type": "belongsTo",
-      "model": "EmployeeRole",
-      "foreignKey": "roleId"
-    },
-    "employee": {
-      "type": "belongsTo",
-      "model": "Employee",
-      "foreignKey": "principalId"
-    }
-  },
+  "relations": {},
   "acls": [
     {
       "accessType": "*",
@@ -30,7 +19,7 @@
     {
       "accessType": "*",
       "principalType": "ROLE",
-      "principalId": "superAdmin",
+      "principalId": "$authenticated",
       "permission": "ALLOW"
     }
   ],
