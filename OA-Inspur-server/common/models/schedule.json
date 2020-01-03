@@ -52,9 +52,14 @@
     "update_time": {
       "type": "date",
       "required": false,
-      "description": "修改时间"
+      "description": "修改时间",
+      "defaultFn": "now"
     }
   },
+  "hidden": [
+    "create_time",
+    "update_time"
+  ],
   "validations": [],
   "relations": {
     "employee": {
@@ -75,6 +80,26 @@
       "principalType": "ROLE",
       "principalId": "superAdmin",
       "permission": "ALLOW"
+    },
+    {
+      "accessType": "READ",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "createSchedule"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "updateSchedule"
     }
   ],
   "methods": {}
