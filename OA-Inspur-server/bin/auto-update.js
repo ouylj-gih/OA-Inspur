@@ -9,7 +9,7 @@ var ds = app.datasources.mydb;
 // var roles = require('./roles');
 // var initData = require('./init-data');
 
-var models = ['LogRecord', 'Orgnization', 'Position', 'Schedule'];
+var models = ['LogRecord', 'Orgnization', 'Position', 'Schedule', 'Notification'];
 var count = models.length;
 models.forEach(function (model) {
   ds.autoupdate(model, function (err) {

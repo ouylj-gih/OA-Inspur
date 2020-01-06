@@ -2,56 +2,47 @@
 
 const _async = require('async');
 const utils = require("../../server/lib/utils");
-const redis = require("../../server/lib/datasources/redis");
-const randomString = require("randomstring");
 
-module.exports = function (Schedule) {
-
-  const createScheduleModel = {
+module.exports = function(Notification) {
+  const createNotificationModel = {
     title: {
       type: 'string',
       required: true,
       description: "标题"
     },
-    description: {
+    detail: {
       type: 'string',
       required: true,
-      description: "描述 "
+      description: "详情 "
     },
-    start_time: {
+    imgUrl: {
       type: 'string',
-      required: true,
-      description: "开始时间"
-    },
-    end_time: {
-      type: 'string',
-      required: true,
-      description: "结束时间 "
+      description: "图片url"
     }
   };
 
-  const updateScheduleModel = {
+  const updateNotificationModel = {
     id: {
       type: 'string',
       required: true,
-      description: "日程ID"
+      description: "通知ID"
     },
-    ...createScheduleModel
+    ...createNotificationModel
   }
 
 
-  function defineCreateScheduleModel(app, cb) {
+  function defineCreateNotificationModel(app, cb) {
     var ds = app.datasources.db;
-    ds.define('createScheduleModel', createScheduleModel, {
+    ds.define('createNotificationModel', createNotificationModel, {
       idInjection: false
     });
     cb(null, app);
   }
 
-  function defineCreateSchedule(app, callback) {
-    Schedule.createSchedule = function (info, cb) {
+  function defineCreateNotification(app, callback) {
+    Notification.createNotification = function (info, cb) {
       function checkModelValid(cb) {
-        const Model = app.datasources.db.getModel('createScheduleModel');
+        const Model = app.datasources.db.getModel('createNotificationModel');
         var model = new Model(info);
         model.isValid(function (valid) {
           if (!valid) {
@@ -62,14 +53,13 @@ module.exports = function (Schedule) {
         });
       }
 
-      function createSchedule(ign, cb) {
-        console.log(info);
-        Schedule.findOrCreate({
+      function createNotification(ign, cb) {
+        Notification.findOrCreate({
           ...info,
           update_time: new Date().toISOString()
         }, (err, logList) => {
           if (err) {
-            return cb(utils.clientError('创建日程失败: ' + err), null);
+            return cb(utils.clientError('创建通知失败: ' + err), null);
           }
           cb(null, logList);
         })
@@ -77,7 +67,7 @@ module.exports = function (Schedule) {
 
       _async.waterfall([
         checkModelValid,
-        createSchedule
+        createNotification
       ], function (err, result) {
         if (err) {
           return cb(err, null);
@@ -86,27 +76,27 @@ module.exports = function (Schedule) {
       })
     }
 
-    Schedule.remoteMethod('createSchedule', {
+    Notification.remoteMethod('createNotification', {
       http: {
         verb: 'POST'
       },
-      description: '创建日程',
+      description: '创建通知',
       accepts: {
         arg: 'info',
-        type: 'createScheduleModel',
+        type: 'createNotificationModel',
         http: {
           source: 'body'
         }
       },
       returns: {
         arg: 'result',
-        type: 'Schedule',
+        type: 'Notification',
         root: true
       }
     });
 
-    Schedule.beforeRemote('createSchedule', function (ctx, unused, next) {
-      ctx.req.body.employee_id = ctx.req.accessToken.userId
+    Notification.beforeRemote('createNotification', function (ctx, unused, next) {
+      ctx.req.body.publisher_id = ctx.req.accessToken.userId
       next();
     })
 
@@ -114,18 +104,18 @@ module.exports = function (Schedule) {
   }
 
 
-  function defineUpdateScheduleModel(app, cb) {
+  function defineUpdateNotificationModel(app, cb) {
     var ds = app.datasources.db;
-    ds.define('updateScheduleModel', updateScheduleModel, {
+    ds.define('updateNotificationModel', updateNotificationModel, {
       idInjection: false
     });
     cb(null, app);
   }
 
-  function defineUpdateSchedule(app, callback) {
-    Schedule.updateSchedule = function (info, cb) {
+  function defineUpdateNotification(app, callback) {
+    Notification.updateNotification = function (info, cb) {
       function checkModelValid(cb) {
-        const Model = app.datasources.db.getModel('updateScheduleModel');
+        const Model = app.datasources.db.getModel('updateNotificationModel');
         var model = new Model(info);
         model.isValid(function (valid) {
           if (!valid) {
@@ -136,14 +126,13 @@ module.exports = function (Schedule) {
         });
       }
 
-      function updateSchedule(ign, cb) {
-        console.log(info);
-        Schedule.upsert({
+      function updateNotification(ign, cb) {
+        Notification.upsert({
           ...info,
           update_time: new Date().toISOString()
         }, (err, logList) => {
           if (err) {
-            return cb(utils.clientError('编辑日程失败: ' + err), null);
+            return cb(utils.clientError('编辑通知失败: ' + err), null);
           }
           cb(null, logList);
         })
@@ -151,7 +140,7 @@ module.exports = function (Schedule) {
 
       _async.waterfall([
         checkModelValid,
-        updateSchedule
+        updateNotification
       ], function (err, result) {
         if (err) {
           return cb(err, null);
@@ -160,36 +149,36 @@ module.exports = function (Schedule) {
       })
     }
 
-    Schedule.remoteMethod('updateSchedule', {
+    Notification.remoteMethod('updateNotification', {
       http: {
         verb: 'POST'
       },
-      description: '编辑日程',
+      description: '编辑通知',
       accepts: {
         arg: 'info',
-        type: 'updateScheduleModel',
+        type: 'updateNotificationModel',
         http: {
           source: 'body'
         }
       },
       returns: {
         arg: 'result',
-        type: 'Schedule',
+        type: 'Notification',
         root: true
       }
     });
 
-    Schedule.beforeRemote('updateSchedule', function (ctx, unused, next) {
-      ctx.req.body.employee_id = ctx.req.accessToken.userId
+    Notification.beforeRemote('updateNotification', function (ctx, unused, next) {
+      ctx.req.body.publisher_id = ctx.req.accessToken.userId
       next();
     })
   }
 
   _async.waterfall([
-    Schedule.getApp.bind(Schedule),
-    defineCreateScheduleModel,
-    defineCreateSchedule,
-    defineUpdateScheduleModel,
-    defineUpdateSchedule
+    Notification.getApp.bind(Notification),
+    defineCreateNotificationModel,
+    defineCreateNotification,
+    defineUpdateNotificationModel,
+    defineUpdateNotification
   ])
 };

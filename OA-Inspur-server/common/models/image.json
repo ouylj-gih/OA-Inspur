@@ -1,7 +1,7 @@
 {
   "name": "Image",
-  "base": "Model",
   "description": "图片",
+  "base": "Model",
   "idInjection": true,
   "options": {
     "validateUpsert": true

@@ -1,45 +1,30 @@
 {
-  "name": "Schedule",
-  "description": "日程表",
+  "name": "Notification",
+  "description": "公告通知表",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
-  "hidden": [
-    "create_time",
-    "update_time"
-  ],
   "properties": {
     "title": {
       "type": "string",
       "required": true,
       "description": "标题"
     },
-    "employee_id": {
+    "detail": {
       "type": "string",
       "required": true,
-      "description": "员工ID"
+      "description": "详情"
     },
-    "description": {
+    "imgUrl": {
+      "type": "string",
+      "description": "图片url"
+    },
+    "publisher_id": {
       "type": "string",
       "required": true,
-      "description": "描述"
-    },
-    "done": {
-      "type": "boolean",
-      "required": true,
-      "description": "是否完成",
-      "default": "false"
-    },
-    "start_time": {
-      "type": "string",
-      "required": true,
-      "description": "开始时间"
-    },
-    "end_time": {
-      "type": "string",
-      "description": "结束时间"
+      "description": "发布人ID"
     },
     "display": {
       "type": "number",
@@ -56,8 +41,7 @@
     "update_time": {
       "type": "date",
       "required": false,
-      "description": "修改时间",
-      "defaultFn": "now"
+      "description": "修改时间"
     }
   },
   "validations": [],
@@ -65,7 +49,7 @@
     "employee": {
       "type": "belongsTo",
       "model": "Employee",
-      "foreignKey": "employee_id"
+      "foreignKey": "publisher_id"
     }
   },
   "acls": [
@@ -84,7 +68,7 @@
     {
       "accessType": "READ",
       "principalType": "ROLE",
-      "principalId": "$owner",
+      "principalId": "$authenticated",
       "permission": "ALLOW"
     },
     {
@@ -92,14 +76,14 @@
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "createSchedule"
+      "property": "createNotification"
     },
     {
       "accessType": "EXECUTE",
       "principalType": "ROLE",
       "principalId": "$authenticated",
       "permission": "ALLOW",
-      "property": "updateSchedule"
+      "property": "updateNotification"
     },
     {
       "accessType": "EXECUTE",

@@ -64,6 +64,10 @@
     "dataSource": "mydb",
     "public": true
   },
+  "Notification": {
+    "dataSource": "mydb",
+    "public": true
+  },
   "Image": {
     "dataSource": "storage",
     "public": true
