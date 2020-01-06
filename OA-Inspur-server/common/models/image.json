@@ -1,7 +1,7 @@
 {
-  "name": "portrait",
+  "name": "Image",
   "base": "Model",
-  "description": "头像",
+  "description": "图片",
   "idInjection": true,
   "options": {
     "validateUpsert": true

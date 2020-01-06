@@ -64,7 +64,7 @@
     "dataSource": "mydb",
     "public": true
   },
-  "portrait": {
+  "Image": {
     "dataSource": "storage",
     "public": true
   }
