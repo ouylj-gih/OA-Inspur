@@ -24,3 +24,4 @@ server/storage/container1
 dump.rdb
 bin/ng2-lib-gen.sh
 bin/ng6-lib-gen.sh
+server/storage/
