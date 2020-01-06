@@ -63,7 +63,6 @@ module.exports = function (Schedule) {
       }
 
       function createSchedule(ign, cb) {
-        console.log(info);
         Schedule.findOrCreate({
           ...info,
           update_time: new Date().toISOString()
@@ -137,7 +136,6 @@ module.exports = function (Schedule) {
       }
 
       function updateSchedule(ign, cb) {
-        console.log(info);
         Schedule.upsert({
           ...info,
           update_time: new Date().toISOString()
