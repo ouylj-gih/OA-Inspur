@@ -68,7 +68,11 @@
     "dataSource": "mydb",
     "public": true
   },
-  "Image": {
+  "Container": {
+    "dataSource": "storage",
+    "public": false
+  },
+  "Files": {
     "dataSource": "storage",
     "public": true
   }

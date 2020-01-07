@@ -1,0 +1,31 @@
+{
+  "name": "Files",
+  "base": "Model",
+  "description": " Files/{portrait|doc} 文件{图片|文档}",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "type": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "container": {
+      "type": "string"
+    },
+    "size": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [
+  ],
+  "methods": {}
+}
