@@ -1,6 +1,6 @@
 'use strict';
 const _async = require('async');
-const CONTAINER_URL = '/api/Files/';
+const CONTAINER_URL = '/static/';
 
 module.exports = function (Files) {
 
@@ -62,8 +62,8 @@ module.exports = function (Files) {
               type: item.type,
               size: item.size,
               container: item.container,
-              url: CONTAINER_URL + item.container +
-                '/files/' + item.name,
+              url: CONTAINER_URL + item.container + '/' +
+                item.name,
             });
           });
 
