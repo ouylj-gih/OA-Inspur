@@ -79,7 +79,7 @@ module.exports = function (Employee) {
             realm: false,
             emailVerified: false,
           },
-          order: 'id desc',
+          order: 'id asc',
           include: [{
             relation: "orgnization",
             scope: { // fetch 1st "page" with 5 entries in it
@@ -126,7 +126,7 @@ module.exports = function (Employee) {
         arg: 'info',
         type: 'getContactsModel',
         http: {
-          source: 'body'
+          source: 'query'
         }
       },
       returns: {
