@@ -2,8 +2,6 @@
 
 const _async = require('async');
 const utils = require("../../server/lib/utils");
-const redis = require("../../server/lib/datasources/redis");
-const randomString = require("randomstring");
 
 module.exports = function (Employee) {
   const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
@@ -44,7 +42,7 @@ module.exports = function (Employee) {
     cb(null, app);
   }
 
-  function defineGetContacts(app, cb) {
+  function defineGetContacts(app, callback) {
     Employee.getContacts = function (info, cb) {
       function checkModelValid(cb) {
         const Model = app.datasources.db.getModel('getContactsModel');
@@ -128,7 +126,7 @@ module.exports = function (Employee) {
         arg: 'info',
         type: 'getContactsModel',
         http: {
-          source: 'query'
+          source: 'body'
         }
       },
       returns: {
@@ -137,11 +135,94 @@ module.exports = function (Employee) {
         root: true
       }
     });
+
+    callback(null, app);
+  }
+
+  function defineUpdateEnNameModel(app, cb) {
+    const updateEnNameModel = {
+      en_name: {
+        type: 'string',
+        required: true,
+        description: "英文名"
+      }
+    };
+
+    var ds = app.datasources.db;
+    ds.define('updateEnNameModel', updateEnNameModel, {
+      idInjection: false
+    });
+    cb(null, app);
+  }
+
+  function defineUpdateEnName(app, cb) {
+    Employee.updateEnName = function (info, cb) {
+      function checkModelValid(cb) {
+        const Model = app.datasources.db.getModel('updateEnNameModel');
+        var model = new Model(info);
+        model.isValid(function (valid) {
+          if (!valid) {
+            cb(utils.clientError(model.errors), null);
+          } else {
+            cb(null, true);
+          }
+        });
+      }
+
+      function updateEnName(ign, cb) {
+        Employee.updateAll({
+          id: info.id
+        }, {
+          en_name: info.en_name
+        }, (err, logList) => {
+          if (err) {
+            return cb(utils.clientError('英文名修改失败: ' + err), null);
+          }
+          cb(null, logList);
+        })
+      }
+
+      _async.waterfall([
+        checkModelValid,
+        updateEnName
+      ], function (err, result) {
+        if (err) {
+          return cb(err, null);
+        }
+        cb(null, result)
+      })
+    }
+
+    Employee.remoteMethod('updateEnName', {
+      http: {
+        verb: 'POST'
+      },
+      description: '修改英文名',
+      accepts: {
+        arg: 'info',
+        type: 'updateEnNameModel',
+        http: {
+          source: 'body'
+        }
+      },
+      returns: {
+        arg: 'result',
+        type: 'Employee',
+        root: true
+      }
+    });
+
+    Employee.beforeRemote('updateEnName', function (ctx, unused, next) {
+      ctx.req.body.id = ctx.req.accessToken.userId
+      next();
+    })
   }
 
   _async.waterfall([
     Employee.getApp.bind(Employee),
     defineGetContactsModel,
-    defineGetContacts
+    defineGetContacts,
+    defineUpdateEnNameModel,
+    defineUpdateEnName
   ])
 };
