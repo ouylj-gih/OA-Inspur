@@ -12,7 +12,7 @@ module.exports = function (server) {
   var router = server.loopback.Router();
   // router.get('/', server.loopback.status());
   router.get('/avatar', (req, res) => {
-    res.sendFile(path.join(__dirname, '/../storage/defaultUser.jpg'));
+    res.sendFile(path.join(__dirname, '/../storage/portrait/defaultUser.jpg'));
   });
   // server.use('/static', express.static('public'));
   server.use('/static', (req, res) => {
