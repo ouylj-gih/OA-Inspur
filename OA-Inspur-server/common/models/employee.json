@@ -185,6 +185,13 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "getContacts"
+    },
+    {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "updateEnName"
     }
   ],
   "methods": {}
