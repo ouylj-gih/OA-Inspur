@@ -109,8 +109,10 @@ angular.module('app', [])
       'use strict';
 
       $scope.items = Items;
-      $scope.i = 6;
+      $scope.i = 0;
       $scope.time = 0;
+      $scope.m = 0;
+      $scope.s = 0;
       $scope.progress = 0;
       $scope.timer = null;
       $scope.p = false;
@@ -124,10 +126,16 @@ angular.module('app', [])
         $scope.p = true;
 
         $scope.timer = setInterval(s=>{
-          if ($scope.time / 60 > $scope.items[$scope.i]['duration']) $scope.reset();
           if (!$scope.p) return false;
-          $scope.time +=1;
-          $scope.progress =($scope.time / 60 / $scope.items[$scope.i]['duration'] * 100).toFixed(0) + '%';
+          if ($scope.time >= $scope.items[$scope.i]['duration']*60) {
+            $scope.reset();
+          } else {
+            $scope.time +=1;
+            $scope.progress =($scope.time / 60 / $scope.items[$scope.i]['duration'] * 100).toFixed(0) + '%';
+            $scope.m= Math.floor($scope.items[$scope.i]['duration'] - $scope.time / 60);
+            const flag= Math.floor(($scope.items[$scope.i]['duration'] * 60 - $scope.time) % 60);
+            $scope.s= flag > 9? flag:'0'+flag;
+          }
 
           $scope.$apply();
           console.log($scope.time,$scope.progress);
@@ -145,6 +153,8 @@ angular.module('app', [])
         $scope.timer = null;
         $scope.p = false;
         $scope.progress = 0;
+        $scope.m = 0;
+        $scope.s = 0;
       }
     }
   )

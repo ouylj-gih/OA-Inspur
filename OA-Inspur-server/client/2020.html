@@ -14,13 +14,83 @@
   <!--<script src="../bower_components/angular/angular.js"></script>-->
   <script src="http://code.angularjs.org/1.4.4/angular.min.js"></script>
   <script src="2020.js"></script>
+  <script>
+    $.extend({
+      // 雪花飘落组件
+      snowflake: function(options) {
+        var $items, len,
+          win_height = $(window).height(),
+          maxVal = $(window).width() - 24, // 防止浏览器出现横向滚动条，24px为font-size: 35px;时的宽度
+
+          options = $.extend({
+            length: 21,     // 数量
+            interval: 1200, // 雪花之间出现的时间间隔
+            duration: 24000 // 雪花的动画时间
+          }, options || {});
+
+        len = options.length;
+
+        // 初始化dom
+        (function(){
+          var flakeHtmlStr = '', i;
+
+          // 插入DOM，并初始化其样式
+          for (i = 0; i < len; i++) {
+            flakeHtmlStr += '<div class="snow-flake">&#10052;</div>';
+          }
+          $(flakeHtmlStr).appendTo('body');
+          $items = $('.snow-flake').css({
+            position: 'absolute',
+            top: '-40px',
+            color: '#FFF',
+            zIndex: 999
+          }).wrapAll('<div id="snowflake-box"></div>');
+        }());
+
+        // 处理单个雪花
+        function handleItem(idx) {
+          $items.eq(idx)
+            .css({
+              top: '-40px',
+              opacity: 1,
+              left: Math.random() * maxVal + 'px',
+              fontSize: [25, 30, 35][(Math.random() * 3).toString().charAt(0)] + 'px'
+            })
+            .animate({
+              top: win_height + 'px',
+              opacity: 0
+            }, options.duration);
+        }
+
+        // 开始运行
+        function running() {
+          var i = 0;
+          setTimeout(function call() {
+            handleItem(i);
+            if (i < len-1) {
+              i++;
+            }
+            else {
+              i = 0;
+            }
+            setTimeout(call, options.interval);
+          }, 0);
+        }
+        running();
+      }
+    });
+    $(document).ready(()=>{
+
+      $.snowflake(); // 调用
+    })
+  </script>
 
   <style>
     html, body {
       height: 100%;
     }
     .jumbotron{
-      background: #ffffff;
+      background: #f5f5f5;
     }
     .center-block {
       display: block;
@@ -61,27 +131,36 @@
         <p>
           Queue progress:
 
-        <div class="progress" style="">
+        <div class="progress" style="background-color: pink;">
           <div class="progress-bar" role="progressbar"
                ng-style="{ 'width': progress }">{{progress?progress:''}}
           </div>
         </div>
         </p>
-        <button type="button" class="btn btn-success btn-s"
-                ng-click="start()"
-                ng-disabled="p">
-          <span class="glyphicon glyphicon-expand"></span> Start
-        </button>
-        <button type="button" class="btn btn-warning btn-s"
-                ng-click="pause()"
-                ng-disabled="!p">
-          <span class="glyphicon glyphicon-pause"></span> Pause
-        </button>
-        <button type="button" class="btn btn-danger btn-s"
-                ng-click="reset()"
-                ng-disabled="time===0">
-          <span class="glyphicon glyphicon-refresh"></span> Reset
-        </button>
+        <div class="clearfix ">
+          <button type="button" class="btn btn-success btn-s"
+                  ng-click="start()"
+                  ng-disabled="p">
+            <span class="glyphicon glyphicon-expand"></span> Start
+          </button>
+          <button type="button" class="btn btn-warning btn-s"
+                  ng-click="pause()"
+                  ng-disabled="!p">
+            <span class="glyphicon glyphicon-pause"></span> Pause
+          </button>
+          <button type="button" class="btn btn-danger btn-s"
+                  ng-click="reset()"
+                  ng-disabled="time===0">
+            <span class="glyphicon glyphicon-refresh"></span> Reset
+          </button>
+
+          <span class="pull-right brand-success" ng-if="m||s||p" style="font-family: fantasy">
+          <span class="digit minutes">{{ m}}
+          </span>:
+          <span class="digit seconds">{{s}}
+          </span>
+        </span>
+        </div>
       </div>
 
     </div>
@@ -107,7 +186,7 @@
         <div class="panel-heading">{{l}}</div>
         <div class="panel-body">
           <p ng-repeat="h in items[i][l].split('|')" >{{h}}</p>
-          <img src="./20200109111751.png" alt="" ng-if="i === 10 && l==='rule'">
+          <img src="./20200109111751.png" alt="" ng-if="i === 5 && l==='rule'">
         </div>
       </div>
     </div>
