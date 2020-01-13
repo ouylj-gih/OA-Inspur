@@ -77,7 +77,7 @@
     "public": true
   },
   "Files": {
-    "dataSource": "storage",
+    "dataSource": false,
     "public": true
   }
 }
