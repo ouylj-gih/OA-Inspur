@@ -8,9 +8,14 @@ datasources.mysql = mysql;
 datasources.redis = redis;
 
 module.exports = Object.assign(datasources, {
-  getFilename: function(fileInfo) {
-    let fileName = fileInfo.name.replace(/\s+/g, '-').toLowerCase();
-    let fileObj = path.parse(fileName);
-    return fileObj.name + Date.now() + fileObj.ext;
-  },
+  files:{
+    connector:{
+      getFilename: function(uploadingFile, req, res) {
+        // return Math.random().toString().substr(2) + '.jpg';
+        let fileName = uploadingFile.name.replace(/\s+/g, '-').toLowerCase();
+        let fileObj = path.parse(fileName);
+        return fileObj.name + Date.now() + fileObj.ext;
+      }
+    }
+  }
 });
