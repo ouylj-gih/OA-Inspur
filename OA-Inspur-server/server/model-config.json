@@ -72,6 +72,10 @@
     "dataSource": "storage",
     "public": false
   },
+  "Institution": {
+    "dataSource": "mydb",
+    "public": true
+  },
   "Files": {
     "dataSource": "storage",
     "public": true
