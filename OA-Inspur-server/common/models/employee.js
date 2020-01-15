@@ -139,26 +139,31 @@ module.exports = function (Employee) {
     callback(null, app);
   }
 
-  function defineUpdateEnNameModel(app, cb) {
-    const updateEnNameModel = {
+  function defineUpdateInfoModel(app, cb) {
+    const updateInfoModel = {
       en_name: {
         type: 'string',
-        required: true,
+        required: false,
         description: "英文名"
+      },
+      status: {
+        type: 'string',
+        required: false,
+        description: "状态: working:上班中; resting:休假中"
       }
     };
 
     var ds = app.datasources.db;
-    ds.define('updateEnNameModel', updateEnNameModel, {
+    ds.define('updateInfoModel', updateInfoModel, {
       idInjection: false
     });
     cb(null, app);
   }
 
-  function defineUpdateEnName(app, cb) {
-    Employee.updateEnName = function (info, cb) {
+  function defineUpdateInfo(app, cb) {
+    Employee.updateInfo = function (info, cb) {
       function checkModelValid(cb) {
-        const Model = app.datasources.db.getModel('updateEnNameModel');
+        const Model = app.datasources.db.getModel('updateInfoModel');
         var model = new Model(info);
         model.isValid(function (valid) {
           if (!valid) {
@@ -169,14 +174,21 @@ module.exports = function (Employee) {
         });
       }
 
-      function updateEnName(ign, cb) {
+      function updateInfo(ign, cb) {
+        const params = {};
+        if (info.en_name) {
+          params['en_name'] = info.en_name;
+        }
+        if (info.status) {
+          params['status'] = info.status;
+        }
         Employee.updateAll({
           id: info.id
         }, {
-          en_name: info.en_name
+          ...params
         }, (err, logList) => {
           if (err) {
-            return cb(utils.clientError('英文名修改失败: ' + err), null);
+            return cb(utils.clientError('修改失败: ' + err), null);
           }
           cb(null, logList);
         })
@@ -184,7 +196,7 @@ module.exports = function (Employee) {
 
       _async.waterfall([
         checkModelValid,
-        updateEnName
+        updateInfo
       ], function (err, result) {
         if (err) {
           return cb(err, null);
@@ -193,14 +205,14 @@ module.exports = function (Employee) {
       })
     }
 
-    Employee.remoteMethod('updateEnName', {
+    Employee.remoteMethod('updateInfo', {
       http: {
         verb: 'POST'
       },
-      description: '修改英文名',
+      description: '修改英文名/状态',
       accepts: {
         arg: 'info',
-        type: 'updateEnNameModel',
+        type: 'updateInfoModel',
         http: {
           source: 'body'
         }
@@ -212,7 +224,7 @@ module.exports = function (Employee) {
       }
     });
 
-    Employee.beforeRemote('updateEnName', function (ctx, unused, next) {
+    Employee.beforeRemote('updateInfo', function (ctx, unused, next) {
       ctx.req.body.id = ctx.req.accessToken.userId
       next();
     })
@@ -222,7 +234,7 @@ module.exports = function (Employee) {
     Employee.getApp.bind(Employee),
     defineGetContactsModel,
     defineGetContacts,
-    defineUpdateEnNameModel,
-    defineUpdateEnName
+    defineUpdateInfoModel,
+    defineUpdateInfo
   ])
 };
