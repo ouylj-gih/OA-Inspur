@@ -21,7 +21,7 @@ module.exports = function (Employee) {
     message: '请输入正确的电话号码'
   });
 
-  function defineGetContactsModel(app, cb) {
+  function defineGetContactsModel(app, callback) {
     const getContactsModel = {
       pageSize: {
         type: 'number',
@@ -39,14 +39,14 @@ module.exports = function (Employee) {
     ds.define('getContactsModel', getContactsModel, {
       idInjection: false
     });
-    cb(null, app);
+    callback(null, app);
   }
 
   function defineGetContacts(app, callback) {
-    Employee.getContacts = function (info, cb) {
+    Employee.getContacts = function (pagination, search, rb) {
       function checkModelValid(cb) {
         const Model = app.datasources.db.getModel('getContactsModel');
-        var model = new Model(info);
+        var model = new Model(pagination);
         model.isValid(function (valid) {
           if (!valid) {
             cb(utils.clientError(model.errors), null);
@@ -58,19 +58,52 @@ module.exports = function (Employee) {
 
       function getContacts(ign, cb) {
         const paginator = {};
-        if (info && info.hasOwnProperty('pageSize') && info.hasOwnProperty('pageNumber')) {
-          paginator["limit"] = Number(info.pageSize);
-          paginator["offset"] = info.pageNumber * info.pageSize;
+        const searchParams = {};
+        if (pagination && pagination.hasOwnProperty('pageSize') && pagination.hasOwnProperty('pageNumber')) {
+          paginator["limit"] = Number(pagination.pageSize);
+          paginator["offset"] = pagination.pageNumber * pagination.pageSize;
         }
-        Employee.find({
-          where: {
-            and: [{
-              display: 1
-            }, {
-              id: {
-                neq: 1
+        if (search) {
+          searchParams['or'] = [
+            {
+              username: {
+                like: `%${search}%`
               }
-            }]
+            },
+            {
+              phone_number: {
+                like: `%${search}%`
+              }
+            },
+            {
+              en_name: {
+                like: `%${search}%`
+              }
+            },
+            {
+              address: {
+                like: `%${search}%`
+              }
+            },
+          ];
+        }
+
+        // 查询条件
+        const params = {
+          where: {
+            and: [
+              {
+                display: 1
+              },
+              {
+                id: {
+                  neq: 1
+                }
+              },
+              {
+                ...searchParams
+              }
+            ]
           },
           fields: {
             display: false,
@@ -98,7 +131,8 @@ module.exports = function (Employee) {
             }
           }],
           ...paginator
-        }, (err, logList) => {
+        };
+        Employee.find(params, (err, logList) => {
           if (err) {
             return cb(utils.clientError('查询通讯录错误: ' + err), null);
           }
@@ -111,9 +145,9 @@ module.exports = function (Employee) {
         getContacts
       ], function (err, result) {
         if (err) {
-          return cb(err, null);
+          return rb(err, null);
         }
-        cb(null, result)
+        rb(null, result)
       })
     }
 
@@ -122,13 +156,19 @@ module.exports = function (Employee) {
         verb: 'GET'
       },
       description: '获取通讯录',
-      accepts: {
-        arg: 'info',
+      accepts: [{
+        arg: 'pagination',
         type: 'getContactsModel',
         http: {
           source: 'query'
         }
-      },
+      }, {
+        arg: 'search',
+        type: 'string',
+        http: {
+          source: 'query'
+        }
+      }],
       returns: {
         arg: 'result',
         type: 'Employee',
@@ -139,7 +179,7 @@ module.exports = function (Employee) {
     callback(null, app);
   }
 
-  function defineUpdateInfoModel(app, cb) {
+  function defineUpdateInfoModel(app, callback) {
     const updateInfoModel = {
       en_name: {
         type: 'string',
@@ -157,11 +197,11 @@ module.exports = function (Employee) {
     ds.define('updateInfoModel', updateInfoModel, {
       idInjection: false
     });
-    cb(null, app);
+    callback(null, app);
   }
 
-  function defineUpdateInfo(app, cb) {
-    Employee.updateInfo = function (info, cb) {
+  function defineUpdateInfo(app) {
+    Employee.updateInfo = function (info, rb) {
       function checkModelValid(cb) {
         const Model = app.datasources.db.getModel('updateInfoModel');
         var model = new Model(info);
@@ -199,9 +239,9 @@ module.exports = function (Employee) {
         updateInfo
       ], function (err, result) {
         if (err) {
-          return cb(err, null);
+          return rb(err, null);
         }
-        cb(null, result)
+        rb(null, result)
       })
     }
 
