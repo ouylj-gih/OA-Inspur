@@ -64,8 +64,7 @@ module.exports = function (Employee) {
           paginator["offset"] = pagination.pageNumber * pagination.pageSize;
         }
         if (search) {
-          searchParams['or'] = [
-            {
+          searchParams['or'] = [{
               username: {
                 like: `%${search}%`
               }
@@ -91,8 +90,7 @@ module.exports = function (Employee) {
         // 查询条件
         const params = {
           where: {
-            and: [
-              {
+            and: [{
                 display: 1
               },
               {
@@ -136,7 +134,25 @@ module.exports = function (Employee) {
           if (err) {
             return cb(utils.clientError('查询通讯录错误: ' + err), null);
           }
-          cb(null, logList);
+          Employee.count({
+            and: [{
+                display: 1
+              },
+              {
+                id: {
+                  neq: 1
+                }
+              }
+            ]
+          }, (err, count) => {
+            if (err) {
+              return cb(utils.clientError('查询通讯录错误: ' + err), null);
+            }
+            cb(null, {
+              totalCount: count,
+              employee: logList,
+            });
+          })
         })
       }
 
@@ -171,7 +187,7 @@ module.exports = function (Employee) {
       }],
       returns: {
         arg: 'result',
-        type: 'Employee',
+        type: 'any',
         root: true
       }
     });
