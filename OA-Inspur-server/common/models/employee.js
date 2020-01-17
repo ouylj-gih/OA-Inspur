@@ -44,7 +44,7 @@ module.exports = function (Employee) {
   }
 
   function defineGetContacts(app, callback) {
-    Employee.getContacts = function (pagination, search, rb) {
+    Employee.getContacts = function (pagination, search, orgId, rb) {
       function checkModelValid(cb) {
         const Model = app.datasources.db.getModel('getContactsModel');
         var model = new Model(pagination);
@@ -102,6 +102,11 @@ module.exports = function (Employee) {
         if (search) {
           searchParams.and.push(likeParams);
         }
+        if (orgId) {
+          searchParams.and.push({
+            org_id: orgId
+          })
+        }
 
         // 查询条件
         const params = {
@@ -137,7 +142,7 @@ module.exports = function (Employee) {
           if (err) {
             return cb(utils.clientError('查询通讯录错误: ' + err), null);
           }
-          Employee.count(baseParams, (err, count) => {
+          Employee.count(searchParams, (err, count) => {
             if (err) {
               return cb(utils.clientError('查询通讯录错误: ' + err), null);
             }
@@ -173,6 +178,12 @@ module.exports = function (Employee) {
         }
       }, {
         arg: 'search',
+        type: 'string',
+        http: {
+          source: 'query'
+        }
+      }, {
+        arg: 'org_id',
         type: 'string',
         http: {
           source: 'query'
