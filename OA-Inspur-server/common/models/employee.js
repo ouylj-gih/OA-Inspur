@@ -2,6 +2,7 @@
 
 const _async = require('async');
 const utils = require("../../server/lib/utils");
+const _ = require('lodash');
 
 module.exports = function (Employee) {
   const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
@@ -58,13 +59,20 @@ module.exports = function (Employee) {
 
       function getContacts(ign, cb) {
         const paginator = {};
-        const searchParams = {};
-        if (pagination && pagination.hasOwnProperty('pageSize') && pagination.hasOwnProperty('pageNumber')) {
-          paginator["limit"] = Number(pagination.pageSize);
-          paginator["offset"] = pagination.pageNumber * pagination.pageSize;
-        }
-        if (search) {
-          searchParams['or'] = [{
+        const baseParams = {
+          and: [{
+              display: 1
+            },
+            {
+              id: {
+                neq: 1
+              }
+            }
+          ]
+        };
+        var searchParams = _.cloneDeep(baseParams);
+        const likeParams = {
+          or: [{
               username: {
                 like: `%${search}%`
               }
@@ -84,25 +92,20 @@ module.exports = function (Employee) {
                 like: `%${search}%`
               }
             },
-          ];
+          ]
+        }
+
+        if (pagination && pagination.hasOwnProperty('pageSize') && pagination.hasOwnProperty('pageNumber')) {
+          paginator["limit"] = Number(pagination.pageSize);
+          paginator["offset"] = pagination.pageNumber * pagination.pageSize;
+        }
+        if (search) {
+          searchParams.and.push(likeParams);
         }
 
         // 查询条件
         const params = {
-          where: {
-            and: [{
-                display: 1
-              },
-              {
-                id: {
-                  neq: 1
-                }
-              },
-              {
-                ...searchParams
-              }
-            ]
-          },
+          where: searchParams,
           fields: {
             display: false,
             create_time: false,
@@ -134,17 +137,7 @@ module.exports = function (Employee) {
           if (err) {
             return cb(utils.clientError('查询通讯录错误: ' + err), null);
           }
-          Employee.count({
-            and: [{
-                display: 1
-              },
-              {
-                id: {
-                  neq: 1
-                }
-              }
-            ]
-          }, (err, count) => {
+          Employee.count(baseParams, (err, count) => {
             if (err) {
               return cb(utils.clientError('查询通讯录错误: ' + err), null);
             }
