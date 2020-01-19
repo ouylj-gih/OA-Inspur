@@ -1,26 +1,21 @@
 {
-  "name": "Institution",
-  "description": "公司制度表",
+  "name": "Office",
+  "description": "办公室",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "title": {
+    "name": {
       "type": "string",
-      "required": true,
-      "description": "标题"
+      "description": "办公室名称",
+      "required": true
     },
-    "detail": {
+    "location": {
       "type": "string",
-      "required": false,
-      "description": "详情"
-    },
-    "fileUrl": {
-      "type": "string",
-      "required": true,
-      "description": "文件url"
+      "description": "地址",
+      "required": true
     },
     "display": {
       "type": "number",
@@ -42,10 +37,10 @@
   },
   "validations": [],
   "relations": {
-    "employee": {
-      "type": "belongsTo",
+    "employees": {
+      "type": "hasMany",
       "model": "Employee",
-      "foreignKey": "publisher_id"
+      "foreignKey": "office_id"
     }
   },
   "acls": [
@@ -59,6 +54,24 @@
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "superAdmin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "departmentAdmin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "personnelAdmin",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "staffAdmin",
       "permission": "ALLOW"
     },
     {

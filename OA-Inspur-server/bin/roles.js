@@ -24,6 +24,7 @@ module.exports = function (app) {
           gender: 'neuter',
           password: 'MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC',
           org_id: '0',
+          office_id: '0',
           position_id: '0',
           entry_date: '2019-12-18T07:25:25.927Z',
           office_location: 'office_location',

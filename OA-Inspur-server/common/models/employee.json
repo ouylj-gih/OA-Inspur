@@ -18,6 +18,11 @@
       "required": true,
       "description": "组织ID"
     },
+    "office_id": {
+      "type": "number",
+      "required": true,
+      "description": "办公室ID"
+    },
     "cn_name": {
       "type": "string",
       "required": false,
@@ -31,12 +36,13 @@
     "gender": {
       "type": "string",
       "required": true,
+      "description": "性别",
       "enum": [
         "male",
         "neuter",
         "female"
       ],
-      "description": "性别"
+      "default": "male"
     },
     "position_id": {
       "type": "number",
@@ -134,6 +140,11 @@
       "type": "belongsTo",
       "model": "Orgnization",
       "foreignKey": "org_id"
+    },
+    "office": {
+      "type": "belongsTo",
+      "model": "Office",
+      "foreignKey": "office_id"
     },
     "position": {
       "type": "belongsTo",

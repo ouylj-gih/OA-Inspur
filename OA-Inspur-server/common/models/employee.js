@@ -135,6 +135,14 @@ module.exports = function (Employee) {
                 name: true
               }
             }
+          }, {
+            relation: "office",
+            scope: { // fetch 1st "page" with 5 entries in it
+              fields: {
+                name: true,
+                location: true
+              }
+            }
           }],
           ...paginator
         };
