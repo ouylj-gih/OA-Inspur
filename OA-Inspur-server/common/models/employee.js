@@ -5,22 +5,10 @@ const utils = require("../../server/lib/utils");
 const _ = require('lodash');
 
 module.exports = function (Employee) {
-  const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
-  const emailReg = /^([A-Za-z0-9_\-\.])+\@(inspurworld.com)$/;
-  Employee.validatesFormatOf('email', {
-    with: emailReg,
-    message: '请输入正确的邮箱地址'
-  });
-  Employee.validatesUniquenessOf('email', {
-    message: '邮箱已存在'
-  });
-  Employee.validatesUniquenessOf('username', {
-    message: '用户名已存在'
-  });
-  Employee.validatesFormatOf('phone_number', {
-    with: phoneReg,
-    message: '请输入正确的电话号码'
-  });
+  function disableRemoteMethods(app, callback) {
+    Employee.disableRemoteMethodByName('upsertWithWhere', true);
+    callback(null, app);
+  }
 
   function defineGetContactsModel(app, callback) {
     const getContactsModel = {
@@ -35,6 +23,22 @@ module.exports = function (Employee) {
         description: "当前页码 "
       }
     };
+    const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
+    const emailReg = /^([A-Za-z0-9_\-\.])+\@(inspurworld.com)$/;
+    Employee.validatesFormatOf('email', {
+      with: emailReg,
+      message: '请输入正确的邮箱地址'
+    });
+    Employee.validatesUniquenessOf('email', {
+      message: '邮箱已存在'
+    });
+    Employee.validatesUniquenessOf('username', {
+      message: '用户名已存在'
+    });
+    Employee.validatesFormatOf('phone_number', {
+      with: phoneReg,
+      message: '请输入正确的电话号码'
+    });
 
     var ds = app.datasources.db;
     ds.define('getContactsModel', getContactsModel, {
@@ -300,6 +304,7 @@ module.exports = function (Employee) {
 
   _async.waterfall([
     Employee.getApp.bind(Employee),
+    disableRemoteMethods,
     defineGetContactsModel,
     defineGetContacts,
     defineUpdateInfoModel,
