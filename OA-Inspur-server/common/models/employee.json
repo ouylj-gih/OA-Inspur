@@ -28,6 +28,16 @@
       "required": false,
       "description": "英文姓名"
     },
+    "gender": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "male",
+        "neuter",
+        "female"
+      ],
+      "description": "性别"
+    },
     "position_id": {
       "type": "number",
       "required": true,

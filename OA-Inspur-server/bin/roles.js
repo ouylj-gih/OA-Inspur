@@ -21,6 +21,7 @@ module.exports = function (app) {
           email: 'superAdmin1@inspurworld.com',
           cn_name: '超级管理员1',
           en_name: 'Super Admin 1',
+          gender: 'neuter',
           password: 'MOvk8SS9MZA1Ca5z58GwcYZ3sH9XL2eC',
           org_id: '0',
           position_id: '0',
