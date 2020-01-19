@@ -77,12 +77,12 @@ module.exports = function (Employee) {
         var searchParams = _.cloneDeep(baseParams);
         const likeParams = {
           or: [{
-              username: {
+              phone_number: {
                 like: `%${search}%`
               }
             },
             {
-              phone_number: {
+              cn_name: {
                 like: `%${search}%`
               }
             },
@@ -95,7 +95,7 @@ module.exports = function (Employee) {
               address: {
                 like: `%${search}%`
               }
-            },
+            }
           ]
         }
 
