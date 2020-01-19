@@ -1,6 +1,6 @@
 {
   "name": "Office",
-  "description": "办公室",
+  "description": "办公室表",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
