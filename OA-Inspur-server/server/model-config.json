@@ -79,5 +79,9 @@
   "Files": {
     "dataSource": false,
     "public": true
+  },
+  "Office": {
+    "dataSource": "mydb",
+    "public": true
   }
 }

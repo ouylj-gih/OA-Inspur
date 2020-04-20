@@ -2,26 +2,15 @@
 
 const _async = require('async');
 const utils = require("../../server/lib/utils");
+const _ = require('lodash');
 
 module.exports = function (Employee) {
-  const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
-  const emailReg = /^([A-Za-z0-9_\-\.])+\@(inspurworld.com)$/;
-  Employee.validatesFormatOf('email', {
-    with: emailReg,
-    message: '请输入正确的邮箱地址'
-  });
-  Employee.validatesUniquenessOf('email', {
-    message: '邮箱已存在'
-  });
-  Employee.validatesUniquenessOf('username', {
-    message: '用户名已存在'
-  });
-  Employee.validatesFormatOf('phone_number', {
-    with: phoneReg,
-    message: '请输入正确的电话号码'
-  });
+  function disableRemoteMethods(app, callback) {
+    Employee.disableRemoteMethodByName('upsertWithWhere', true);
+    callback(null, app);
+  }
 
-  function defineGetContactsModel(app, cb) {
+  function defineGetContactsModel(app, callback) {
     const getContactsModel = {
       pageSize: {
         type: 'number',
@@ -34,19 +23,35 @@ module.exports = function (Employee) {
         description: "当前页码 "
       }
     };
+    const phoneReg = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
+    const emailReg = /^([A-Za-z0-9_\-\.])+\@(inspurworld.com)$/;
+    Employee.validatesFormatOf('email', {
+      with: emailReg,
+      message: '请输入正确的邮箱地址'
+    });
+    Employee.validatesUniquenessOf('email', {
+      message: '邮箱已存在'
+    });
+    Employee.validatesUniquenessOf('username', {
+      message: '用户名已存在'
+    });
+    Employee.validatesFormatOf('phone_number', {
+      with: phoneReg,
+      message: '请输入正确的电话号码'
+    });
 
     var ds = app.datasources.db;
     ds.define('getContactsModel', getContactsModel, {
       idInjection: false
     });
-    cb(null, app);
+    callback(null, app);
   }
 
   function defineGetContacts(app, callback) {
-    Employee.getContacts = function (info, cb) {
+    Employee.getContacts = function (pagination, search, orgId, rb) {
       function checkModelValid(cb) {
         const Model = app.datasources.db.getModel('getContactsModel');
-        var model = new Model(info);
+        var model = new Model(pagination);
         model.isValid(function (valid) {
           if (!valid) {
             cb(utils.clientError(model.errors), null);
@@ -58,20 +63,58 @@ module.exports = function (Employee) {
 
       function getContacts(ign, cb) {
         const paginator = {};
-        if (info && info.hasOwnProperty('pageSize') && info.hasOwnProperty('pageNumber')) {
-          paginator["limit"] = Number(info.pageSize);
-          paginator["offset"] = info.pageNumber * info.pageSize;
-        }
-        Employee.find({
-          where: {
-            and: [{
+        const baseParams = {
+          and: [{
               display: 1
-            }, {
+            },
+            {
               id: {
                 neq: 1
               }
-            }]
-          },
+            }
+          ]
+        };
+        var searchParams = _.cloneDeep(baseParams);
+        const likeParams = {
+          or: [{
+              phone_number: {
+                like: `%${search}%`
+              }
+            },
+            {
+              cn_name: {
+                like: `%${search}%`
+              }
+            },
+            {
+              en_name: {
+                like: `%${search}%`
+              }
+            },
+            {
+              address: {
+                like: `%${search}%`
+              }
+            }
+          ]
+        }
+
+        if (pagination && pagination.hasOwnProperty('pageSize') && pagination.hasOwnProperty('pageNumber')) {
+          paginator["limit"] = Number(pagination.pageSize);
+          paginator["offset"] = pagination.pageNumber * pagination.pageSize;
+        }
+        if (search) {
+          searchParams.and.push(likeParams);
+        }
+        if (orgId) {
+          searchParams.and.push({
+            org_id: orgId
+          })
+        }
+
+        // 查询条件
+        const params = {
+          where: searchParams,
           fields: {
             display: false,
             create_time: false,
@@ -96,13 +139,30 @@ module.exports = function (Employee) {
                 name: true
               }
             }
+          }, {
+            relation: "office",
+            scope: { // fetch 1st "page" with 5 entries in it
+              fields: {
+                name: true,
+                location: true
+              }
+            }
           }],
           ...paginator
-        }, (err, logList) => {
+        };
+        Employee.find(params, (err, logList) => {
           if (err) {
             return cb(utils.clientError('查询通讯录错误: ' + err), null);
           }
-          cb(null, logList);
+          Employee.count(searchParams, (err, count) => {
+            if (err) {
+              return cb(utils.clientError('查询通讯录错误: ' + err), null);
+            }
+            cb(null, {
+              totalCount: count,
+              employee: logList,
+            });
+          })
         })
       }
 
@@ -111,9 +171,9 @@ module.exports = function (Employee) {
         getContacts
       ], function (err, result) {
         if (err) {
-          return cb(err, null);
+          return rb(err, null);
         }
-        cb(null, result)
+        rb(null, result)
       })
     }
 
@@ -122,16 +182,28 @@ module.exports = function (Employee) {
         verb: 'GET'
       },
       description: '获取通讯录',
-      accepts: {
-        arg: 'info',
+      accepts: [{
+        arg: 'pagination',
         type: 'getContactsModel',
         http: {
           source: 'query'
         }
-      },
+      }, {
+        arg: 'search',
+        type: 'string',
+        http: {
+          source: 'query'
+        }
+      }, {
+        arg: 'org_id',
+        type: 'string',
+        http: {
+          source: 'query'
+        }
+      }],
       returns: {
         arg: 'result',
-        type: 'Employee',
+        type: 'any',
         root: true
       }
     });
@@ -139,7 +211,7 @@ module.exports = function (Employee) {
     callback(null, app);
   }
 
-  function defineUpdateInfoModel(app, cb) {
+  function defineUpdateInfoModel(app, callback) {
     const updateInfoModel = {
       en_name: {
         type: 'string',
@@ -157,11 +229,11 @@ module.exports = function (Employee) {
     ds.define('updateInfoModel', updateInfoModel, {
       idInjection: false
     });
-    cb(null, app);
+    callback(null, app);
   }
 
-  function defineUpdateInfo(app, cb) {
-    Employee.updateInfo = function (info, cb) {
+  function defineUpdateInfo(app) {
+    Employee.updateInfo = function (info, rb) {
       function checkModelValid(cb) {
         const Model = app.datasources.db.getModel('updateInfoModel');
         var model = new Model(info);
@@ -199,9 +271,9 @@ module.exports = function (Employee) {
         updateInfo
       ], function (err, result) {
         if (err) {
-          return cb(err, null);
+          return rb(err, null);
         }
-        cb(null, result)
+        rb(null, result)
       })
     }
 
@@ -232,6 +304,7 @@ module.exports = function (Employee) {
 
   _async.waterfall([
     Employee.getApp.bind(Employee),
+    disableRemoteMethods,
     defineGetContactsModel,
     defineGetContacts,
     defineUpdateInfoModel,

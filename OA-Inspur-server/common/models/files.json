@@ -1,7 +1,7 @@
 {
   "name": "Files",
-  "base": "Model",
   "description": " Files/{portrait|doc|cover|placard} 文件{图片|文档|封面轮播图|公告轮播图}",
+  "base": "Model",
   "idInjection": true,
   "options": {
     "validateUpsert": true
