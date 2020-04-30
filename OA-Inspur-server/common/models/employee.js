@@ -208,39 +208,33 @@ module.exports = function (Employee) {
       }
     });
 
+    // 通讯录annual_leave、break_off权限控制
     Employee.afterRemote('getContacts', function (ctx, unused, next) {
       const userId = ctx.req.accessToken.userId;
-      console.log("ctx.result", ctx.result);
-      console.log(app);
       Promise.all([app.models.RoleMap.find({
         where: {
           principalId: userId
         }
       }), app.models.EmployeeRole.find()]).then(([rolemaps, rolelist]) => {
-        console.log(rolemaps);
-        console.log(rolelist);
         const roleName = rolelist.find(role => role.id === rolemaps[0].roleId).name;
         const staffs = _.clone(ctx.result.employee);
         if (roleName === "user") {
           staffs.forEach(staff => {
             if (staff.id !== userId) {
-              staff.annual_leave = null;
-              staff.break_off = null;
+              staff.annual_leave = undefined;
+              staff.break_off = undefined;
             }
-
-          })
+          });
           ctx.result = {
             totalCount: staffs.length,
             employee: staffs
-          }
-          console.log("ctx.result", ctx.result.employee);
+          };
           next();
         } else {
           next();
         }
-      }).catch(error => error)
-    })
-
+      }).catch(error => error);
+    });
     callback(null, app);
   }
 
