@@ -172,6 +172,12 @@
     },
     {
       "principalType": "ROLE",
+      "principalId": "$unauthenticated",
+      "permission": "DENY",
+      "property": "create"
+    },
+    {
+      "principalType": "ROLE",
       "principalId": "user",
       "permission": "DENY",
       "property": "create"
