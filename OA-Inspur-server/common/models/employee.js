@@ -248,7 +248,11 @@ module.exports = function (Employee) {
       status: {
         type: 'string',
         required: false,
-        description: "状态: working:上班中; resting:休假中"
+        description: "状态: working:上班中; resting:休假中",
+        enum: [
+          "working",
+          "resting"
+        ]
       }
     };
 

@@ -171,6 +171,36 @@
       "permission": "DENY"
     },
     {
+      "principalType": "ROLE",
+      "principalId": "user",
+      "permission": "DENY",
+      "property": "create"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "user",
+      "permission": "DENY",
+      "property": "replaceById"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "user",
+      "permission": "DENY",
+      "property": "replaceOrCreate"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "user",
+      "permission": "DENY",
+      "property": "patchAttributes"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "user",
+      "permission": "DENY",
+      "property": "deleteById"
+    },
+    {
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "superAdmin",
@@ -192,12 +222,6 @@
       "accessType": "*",
       "principalType": "ROLE",
       "principalId": "staffAdmin",
-      "permission": "ALLOW"
-    },
-    {
-      "accessType": "*",
-      "principalType": "ROLE",
-      "principalId": "$owner",
       "permission": "ALLOW"
     },
     {
