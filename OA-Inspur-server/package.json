@@ -11,7 +11,7 @@
     "posttest": "npm run lint && nsp check"
   },
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^2.6.4",
     "compression": "^1.0.3",
     "cors": "^2.5.2",
     "date-utils": "^1.2.21",
